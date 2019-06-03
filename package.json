@@ -1,0 +1,40 @@
+{
+  "name": "lto-chain-cache-api",
+  "version": "0.1.0",
+  "description": "API frontend to LTO Chain Cache backed by a SQL DB.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fexra/lto-chain-cache-api.git"
+  },
+  "keywords": [
+    "lto",
+    "cache",
+    "sql",
+    "cryptocurrency"
+  ],
+  "author": "Bob Jansen <bobjansen@protonmail.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/fexra/lto-chain-cache-api/issues"
+  },
+  "homepage": "https://github.com/fexra/lto-chain-cache-api#readme",
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "body-parser": "^1.18.3",
+    "cluster": "^0.7.7",
+    "compression": "^1.7.3",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "knex": "^0.16.3",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "mysql": "^2.16.0"
+  }
+}
