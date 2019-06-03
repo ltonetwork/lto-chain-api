@@ -79,8 +79,8 @@ app.use('/v1/stats', require('./routes/stats'))
 app.use(function onError (err, req, res, next) {
   res.locals.error = process.env.DEBUG == true ? err : {}
   res.statusCode = err.status || 500
-  res.status(400).json(err)
-  console.log(err)
+  res.set('Content-Type', 'application/json');
+  res.status(res.statusCode).json(err.toString())
 })
 
 module.exports = app
