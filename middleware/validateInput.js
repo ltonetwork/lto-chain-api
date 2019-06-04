@@ -10,7 +10,7 @@ function validateInput (req, res, next) {
     const err = check(req)
 
     if (!err.isEmpty()) {
-      res.status(405).json(err.array()[0].msg)
+      res.status(res.statusCode).json(err.toString())
     } else {
       next()
     }
