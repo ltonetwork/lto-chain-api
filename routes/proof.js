@@ -11,48 +11,48 @@ const db = require('../utils/utils').knex
 
 // Get proof by id
 router.get('/:proof',
-[
-  check('proof')
-    .not().isEmpty()
-    .isLength({
-      min: 88,
-      max: 88
-    })
-],
-validateInput,
-async function (req, res, next) {
-  try {
-    const getProof = await db('proofs')
-      .select('tid', 'proof')
-      .where('proof', req.params.proof)
+  [
+    check('proof')
+      .not().isEmpty()
+      .isLength({
+        min: 88,
+        max: 88
+      })
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      const getProof = await db('proofs')
+        .select('tid', 'proof')
+        .where('proof', req.params.proof)
 
-    res.json(getProof)
-  } catch (err) {
-    next(err)
-  }
-})
+      res.json(getProof)
+    } catch (err) {
+      next(err)
+    }
+  })
 
 // Get proof by tid
 router.get('/transaction/:id',
-[
-  check('id')
-    .not().isEmpty()
-    .isLength({
-      min: 44,
-      max: 44
-    })
-],
-validateInput,
-async function (req, res, next) {
-  try {
-    const getProof = await db('proofs')
-      .select('tid', 'proof')
-      .where('tid', req.params.id)
+  [
+    check('id')
+      .not().isEmpty()
+      .isLength({
+        min: 44,
+        max: 44
+      })
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      const getProof = await db('proofs')
+        .select('tid', 'proof')
+        .where('tid', req.params.id)
 
-    res.status(200).json(getProof)
-  } catch (err) {
-    next(err)
-  }
-})
+      res.status(200).json(getProof)
+    } catch (err) {
+      next(err)
+    }
+  })
 
 module.exports = router

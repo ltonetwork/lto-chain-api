@@ -110,125 +110,125 @@ router.get('/all', async function (req, res, next) {
 
 // Get transactions count by period
 router.get('/transaction/:period',
-[
-  check('period')
-    .not().isEmpty()
-],
-validateInput,
-async function (req, res, next) {
-  try {
-    let range
-    let scale
+  [
+    check('period')
+      .not().isEmpty()
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      let range
+      let scale
 
-    if (req.params.period === 'day') {
-      range = 'day'
-      scale = '%Y-%m-%d %H'
-    } else if (req.params.period === 'week') {
-      range = 'week'
-      scale = '%Y-%m-%d'
-    } else if (req.params.period === 'month') {
-      range = 'month'
-      scale = '%Y-%m-%d'
-    } else if (req.params.period === 'year') {
-      range = 'year'
-      scale = '%Y-%m'
-    }
-
-    const countTxns = await db('transactions')
-      .count('* as count')
-      .where('type', 4)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-
-    const countAnchors = await db('transactions')
-      .count('* as count')
-      .where('type', 15)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-
-    const countStartLease = await db('transactions')
-      .count('* as count')
-      .where('type', 8)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-
-    const countCancelLease = await db('transactions')
-      .count('* as count')
-      .where('type', 9)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-
-    const countMassTx = await db('transactions')
-      .count('* as count')
-      .select()
-      .where('type', 11)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-
-    const countMassTransfers = await db('transfers')
-      .leftOuterJoin('transactions', 'transfers.tid', 'transactions.id')
-      .count('* as count')
-      .whereBetween('transactions.datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-    // .groupBy('transfers.tid')
-
-    const getData = await db('transactions')
-      .select(db.raw('date_format(datetime, "' + scale + '") as period, type'))
-      .count('* as count')
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-      .groupByRaw('date_format(datetime, "' + scale + '")')
-      .groupBy('type')
-
-    // Sort data by period and type, thanks IBMC <3
-    const temp = {}
-
-    getData.forEach((obj) => {
-      if (!temp[obj.period]) temp[obj.period] = {}
-      if (!temp[obj.period][obj.type]) temp[obj.period][obj.type] = 0
-      temp[obj.period][obj.type] += obj.count
-    })
-
-    const data = []
-    Object.keys(temp).forEach((key) => {
-      // Populate data with 0 for missing data
-      if (!temp[key][4]) {
-        temp[key][4] = 0
+      if (req.params.period === 'day') {
+        range = 'day'
+        scale = '%Y-%m-%d %H'
+      } else if (req.params.period === 'week') {
+        range = 'week'
+        scale = '%Y-%m-%d'
+      } else if (req.params.period === 'month') {
+        range = 'month'
+        scale = '%Y-%m-%d'
+      } else if (req.params.period === 'year') {
+        range = 'year'
+        scale = '%Y-%m'
       }
 
-      if (!temp[key][11]) {
-        temp[key][11] = 0
-      }
+      const countTxns = await db('transactions')
+        .count('* as count')
+        .where('type', 4)
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
-      if (!temp[key][15]) {
-        temp[key][15] = 0
-      }
+      const countAnchors = await db('transactions')
+        .count('* as count')
+        .where('type', 15)
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
-      if (!temp[key][8]) {
-        temp[key][8] = 0
-      }
+      const countStartLease = await db('transactions')
+        .count('* as count')
+        .where('type', 8)
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
-      if (!temp[key][9]) {
-        temp[key][9] = 0
-      }
+      const countCancelLease = await db('transactions')
+        .count('* as count')
+        .where('type', 9)
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
-      data.push({
-        period: key,
-        types: temp[key]
+      const countMassTx = await db('transactions')
+        .count('* as count')
+        .select()
+        .where('type', 11)
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+
+      const countMassTransfers = await db('transfers')
+        .leftOuterJoin('transactions', 'transfers.tid', 'transactions.id')
+        .count('* as count')
+        .whereBetween('transactions.datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      // .groupBy('transfers.tid')
+
+      const getData = await db('transactions')
+        .select(db.raw('date_format(datetime, "' + scale + '") as period, type'))
+        .count('* as count')
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+        .groupByRaw('date_format(datetime, "' + scale + '")')
+        .groupBy('type')
+
+      // Sort data by period and type, thanks IBMC <3
+      const temp = {}
+
+      getData.forEach((obj) => {
+        if (!temp[obj.period]) temp[obj.period] = {}
+        if (!temp[obj.period][obj.type]) temp[obj.period][obj.type] = 0
+        temp[obj.period][obj.type] += obj.count
       })
-    })
 
-    // console.log(data)
-    const stats = {
-      stats: {
-        standard: countTxns[0].count,
-        anchor: countAnchors[0].count,
-        massTransactions: countMassTx[0].count,
-        massTransfers: countMassTransfers[0].count,
-        startLease: countStartLease[0].count,
-        cancelLease: countCancelLease[0].count
-      },
-      data: data,
-      timestamp: moment().format('YYYY-MM-DD HH:mm:ss Z')
+      const data = []
+      Object.keys(temp).forEach((key) => {
+      // Populate data with 0 for missing data
+        if (!temp[key][4]) {
+          temp[key][4] = 0
+        }
+
+        if (!temp[key][11]) {
+          temp[key][11] = 0
+        }
+
+        if (!temp[key][15]) {
+          temp[key][15] = 0
+        }
+
+        if (!temp[key][8]) {
+          temp[key][8] = 0
+        }
+
+        if (!temp[key][9]) {
+          temp[key][9] = 0
+        }
+
+        data.push({
+          period: key,
+          types: temp[key]
+        })
+      })
+
+      // console.log(data)
+      const stats = {
+        stats: {
+          standard: countTxns[0].count,
+          anchor: countAnchors[0].count,
+          massTransactions: countMassTx[0].count,
+          massTransfers: countMassTransfers[0].count,
+          startLease: countStartLease[0].count,
+          cancelLease: countCancelLease[0].count
+        },
+        data: data,
+        timestamp: moment().format('YYYY-MM-DD HH:mm:ss Z')
+      }
+
+      res.status(200).json(stats)
+    } catch (err) {
+      next(err)
     }
-
-    res.status(200).json(stats)
-  } catch (err) {
-    next(err)
-  }
-})
+  })
 
 module.exports = router

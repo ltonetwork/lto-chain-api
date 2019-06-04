@@ -7,7 +7,6 @@ const db = require('../utils/utils').knex
 
 async function verifyToken (req, res, next) {
   try {
-
     const getToken = await db('tokens')
       .select('id')
       .where('id', req.token.jti)

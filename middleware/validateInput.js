@@ -14,8 +14,7 @@ function validateInput (req, res, next) {
     } else {
       next()
     }
-  }
-  catch(err) {
+  } catch (err) {
     next(err)
   }
 }

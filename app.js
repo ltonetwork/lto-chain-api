@@ -40,28 +40,33 @@ app.use(validator())
 
 // Public Routes
 app.all('/',
-rateLimiter,
-function(req, res, next) {
-  res.set('Content-Type', 'application/json');
-  res.status(200).json('LTO Chain Cache API')
-})
+  rateLimiter,
+  function (req, res, next) {
+    res.set('Content-Type', 'application/json')
+    res.status(200).json('LTO Chain Cache API')
+  })
 
-//app.use('/v1/status', rateLimiter, require('./routes/status'))
+
+// Setup Swagger docs
+const swagger = require('swagger-ui-express')
+app.use('/v1/docs', rateLimiter, swagger.serve, swagger.setup(require('./docs/swagger.json')))
+
+// app.use('/v1/status', rateLimiter, require('./routes/status'))
 
 // Set Auth on Private Routes
 const jwt = require('express-jwt')
 const verifyToken = require('./middleware/verifyToken')
 
-//app.all('/v1/*',
-//jwt({
+// app.all('/v1/*',
+// jwt({
 //  secret: process.env.APP_SECRET,
 //  requestProperty: 'token'
-//}),
-//verifyToken,
-//rateLimiter,
-//function (req, res, next) {
+// }),
+// verifyToken,
+// rateLimiter,
+// function (req, res, next) {
 //  next()
-//})
+// })
 
 // Private Routes
 app.use('/v1/block', require('./routes/block'))
@@ -80,7 +85,7 @@ app.use('/v1/stats', require('./routes/stats'))
 app.use(function onError (err, req, res, next) {
   res.locals.error = process.env.DEBUG == true ? err : {}
   res.statusCode = err.status || 500
-  res.set('Content-Type', 'application/json');
+  res.set('Content-Type', 'application/json')
   res.status(res.statusCode).json(err.toString())
 })
 

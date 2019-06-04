@@ -11,26 +11,26 @@ const db = require('../utils/utils').knex
 
 // Get address by id
 router.get('/:address',
-[
-  check('address')
-    .not().isEmpty()
-    .isLength({
-      min: 35,
-      max: 35
-    })
-],
-validateInput,
-async function (req, res, next) {
-  try {
-    const getAddress = await db('addresses')
-      .select(db.raw('*, date_format(updated,"%Y-%m-%d %h:%i:%s") as updated'))
-      .where('address', req.params.address)
-      .limit(1)
+  [
+    check('address')
+      .not().isEmpty()
+      .isLength({
+        min: 35,
+        max: 35
+      })
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      const getAddress = await db('addresses')
+        .select(db.raw('*, date_format(updated,"%Y-%m-%d %h:%i:%s") as updated'))
+        .where('address', req.params.address)
+        .limit(1)
 
-    res.json(getAddress[0])
-  } catch (err) {
-    next(err)
-  }
-})
+      res.json(getAddress[0])
+    } catch (err) {
+      next(err)
+    }
+  })
 
 module.exports = router
