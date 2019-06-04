@@ -5,10 +5,21 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get feature by block index
-router.get('/:index', async function (req, res, next) {
+router.get('/:index',
+[
+  check('index')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getFeatures = await db('features')
       .select('index', 'feature')

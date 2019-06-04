@@ -5,10 +5,21 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get transactions by block index
-router.get('/block/:index', async function (req, res, next) {
+router.get('/block/:index',
+[
+  check('index')
+    .not().isEmpty()
+    .isInt({
+      min: 1
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getTx = await db('transactions')
       .select()
@@ -41,7 +52,6 @@ router.get('/sender/all', async function (req, res, next) {
 
     res.status(200).json(getAddresses)
   } catch (err) {
-    console.log(err)
     next(err)
   }
 })
@@ -68,13 +78,22 @@ router.get('/recipient/all', async function (req, res, next) {
 
     res.status(200).json(getAddresses)
   } catch (err) {
-    console.log(err)
     next(err)
   }
 })
 
 // Get transactions by address
-router.get('/address/:address', async function (req, res, next) {
+router.get('/address/:address',
+[
+  check('address')
+    .not().isEmpty()
+    .isLength({
+      min: 35,
+      max: 35
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getSender = await db('transactions')
       .select()
@@ -107,7 +126,17 @@ router.get('/unconfirmed', async function (req, res, next) {
 })
 
 // Get transaction by id
-router.get('/:id', async function (req, res, next) {
+router.get('/:id',
+[
+  check('id')
+    .not().isEmpty()
+    .isLength({
+      min: 44,
+      max: 44
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getTx = await db('transactions')
       .select()
@@ -161,8 +190,7 @@ router.get('/:id', async function (req, res, next) {
 
     res.status(200).json(getTx[0])
   } catch (err) {
-    console.log(err)
-    res.status(400).json(err)
+    next(err)
   }
 })
 module.exports = router

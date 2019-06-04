@@ -5,6 +5,8 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get all leases
@@ -22,7 +24,17 @@ router.get('/', async function (req, res, next) {
 })
 
 // Get anchor by tid
-router.get('/transaction/:id', async function (req, res, next) {
+router.get('/transaction/:id',
+[
+  check('id')
+    .not().isEmpty()
+    .isLength({
+      min: 44,
+      max: 44
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getAnchor = await db('anchors')
       .select('tid', 'anchor')

@@ -5,10 +5,12 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Block last
-router.get('/last', async function (req, res, next) {
+router.get('/last',async function (req, res, next) {
   try {
     const getBlock = await db('blocks')
       .leftJoin('consensus', 'blocks.index', 'consensus.index')
@@ -27,7 +29,16 @@ router.get('/last', async function (req, res, next) {
   }
 })
 
-router.get('/last/:index', async function (req, res, next) {
+router.get('/last/:index',
+[
+  check('index')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getBlocks = await db('blocks')
       .leftJoin('consensus', 'blocks.index', 'consensus.index')
@@ -47,7 +58,22 @@ router.get('/last/:index', async function (req, res, next) {
 })
 
 // Block Range
-router.get('/:start/:end', async function (req, res, next) {
+router.get('/:start/:end',
+[
+  check('start')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  }),
+
+  check('end')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getBlocks = await db('blocks')
       .leftJoin('consensus', 'blocks.index', 'consensus.index')
@@ -67,7 +93,17 @@ router.get('/:start/:end', async function (req, res, next) {
 })
 
 // Get block by generator address
-router.get('/address/:address', async function (req, res, next) {
+router.get('/address/:address',
+[
+  check('address')
+    .not().isEmpty()
+    .isLength({
+      min: 35,
+      max: 35
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getBlock = await db('blocks')
       .leftJoin('consensus', 'blocks.index', 'consensus.index')
@@ -108,7 +144,16 @@ router.get('/unconfirmed', async function (req, res, next) {
 })
 
 // Block at index
-router.get('/:index', async function (req, res, next) {
+router.get('/:index',
+[
+  check('index')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getBlock = await db('blocks')
       .leftJoin('consensus', 'blocks.index', 'consensus.index')

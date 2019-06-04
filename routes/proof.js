@@ -5,10 +5,22 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get proof by id
-router.get('/:proof', async function (req, res, next) {
+router.get('/:proof',
+[
+  check('proof')
+    .not().isEmpty()
+    .isLength({
+      min: 88,
+      max: 88
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getProof = await db('proofs')
       .select('tid', 'proof')
@@ -21,7 +33,17 @@ router.get('/:proof', async function (req, res, next) {
 })
 
 // Get proof by tid
-router.get('/transaction/:id', async function (req, res, next) {
+router.get('/transaction/:id',
+[
+  check('id')
+    .not().isEmpty()
+    .isLength({
+      min: 44,
+      max: 44
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getProof = await db('proofs')
       .select('tid', 'proof')

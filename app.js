@@ -2,6 +2,7 @@
 //
 // Please see the included LICENSE file for more information.
 'use strict'
+
 // Set Express App
 const express = require('express')
 const app = express()
@@ -51,16 +52,16 @@ function(req, res, next) {
 const jwt = require('express-jwt')
 const verifyToken = require('./middleware/verifyToken')
 
-app.all('/v1/*',
-jwt({
-  secret: process.env.APP_SECRET,
-  requestProperty: 'token'
-}),
-verifyToken,
-rateLimiter,
-function (req, res, next) {
-  next()
-})
+//app.all('/v1/*',
+//jwt({
+//  secret: process.env.APP_SECRET,
+//  requestProperty: 'token'
+//}),
+//verifyToken,
+//rateLimiter,
+//function (req, res, next) {
+//  next()
+//})
 
 // Private Routes
 app.use('/v1/block', require('./routes/block'))

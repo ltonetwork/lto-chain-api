@@ -5,10 +5,21 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get consensus by block
-router.get('/block/:index', async function (req, res, next) {
+router.get('/block/:index',
+[
+  check('index')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getConsensus = await db('consensus')
       .select()
@@ -21,7 +32,21 @@ router.get('/block/:index', async function (req, res, next) {
 })
 
 // Get consensus by target range
-router.get('/target/:start/:end', async function (req, res, next) {
+router.get('/target/:start/:end',
+[
+  check('start')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  }),
+  check('end')
+  .not().isEmpty()
+  .isInt({
+    min: 1
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getConsensus = await db('consensus')
       .select()
@@ -35,7 +60,17 @@ router.get('/target/:start/:end', async function (req, res, next) {
 })
 
 // Get consensus by signature
-router.get('/signature/:signature', async function (req, res, next) {
+router.get('/signature/:signature',
+[
+  check('signature')
+  .not().isEmpty()
+  .isInt({
+    min: 44,
+    max: 44
+  })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getConsensus = await db('consensus')
       .select()

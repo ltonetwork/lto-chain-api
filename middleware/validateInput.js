@@ -3,14 +3,14 @@
 // Please see the included LICENSE file for more information.
 'use strict'
 
-const { check } = require('express-validator/check')
+const { validationResult } = require('express-validator/check')
 
 function validateInput (req, res, next) {
   try {
-    const err = check(req)
+    const err = validationResult(req)
 
     if (!err.isEmpty()) {
-      res.status(res.statusCode).json(err.toString())
+      res.status(400).json(err.array())
     } else {
       next()
     }

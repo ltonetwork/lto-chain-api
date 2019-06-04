@@ -5,10 +5,22 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
 // Get address by id
-router.get('/:address', async function (req, res, next) {
+router.get('/:address',
+[
+  check('address')
+    .not().isEmpty()
+    .isLength({
+      min: 35,
+      max: 35
+    })
+],
+validateInput,
+async function (req, res, next) {
   try {
     const getAddress = await db('addresses')
       .select(db.raw('*, date_format(updated,"%Y-%m-%d %h:%i:%s") as updated'))

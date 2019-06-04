@@ -5,6 +5,8 @@
 
 const express = require('express')
 const router = express.Router()
+const { check } = require('express-validator/check')
+const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const moment = require('moment')
 
@@ -107,7 +109,13 @@ router.get('/all', async function (req, res, next) {
 })
 
 // Get transactions count by period
-router.get('/transaction/:period', async function (req, res, next) {
+router.get('/transaction/:period',
+[
+  check('period')
+    .not().isEmpty()
+],
+validateInput,
+async function (req, res, next) {
   try {
     let range
     let scale
