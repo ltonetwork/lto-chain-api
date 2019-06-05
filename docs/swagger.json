@@ -17,24 +17,26 @@
     "application/json"
   ],
   "paths": {
-    "/hello": {
+    "/address/{address}": {
       "get": {
-        "description": "Returns 'Hello' to the caller",
-        "operationId": "hello",
+        "description": "Returns labels and balances for a LTO address.",
+        "tags": [
+          "address"
+        ],
         "parameters": [
           {
-            "name": "name",
-            "in": "query",
-            "description": "The name of the person to whom to say hello",
-            "required": false,
-            "type": "string"
+            "name": "address",
+            "in": "path",
+            "description": "A valid LTO address.",
+            "required": true,
+            "type": "base58"
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/HelloWorldResponse"
+              "$ref": "#/definitions/addressResponse"
             }
           },
           "default": {
@@ -46,18 +48,1087 @@
         }
       }
     },
-    "/swagger": {
-      "x-swagger-pipe": "swagger_raw"
-    }
-  },
+    "/anchor/{anchor}": {
+      "get": {
+        "description": "Returns data on a LTO anchor.",
+        "tags": [
+          "anchor"
+        ],
+        "parameters": [
+          {
+            "name": "anchor",
+            "in": "path",
+            "description": "A valid LTO anchor.",
+            "required": true,
+            "type": "base58"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/anchorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/anchor/transaction/{id}": {
+      "get": {
+        "description": "Returns data on a LTO anchor.",
+        "tags": [
+          "anchor"
+        ],
+        "parameters": [
+          {
+            "name": "transaction",
+            "in": "path",
+            "description": "A valid LTO transaction.",
+            "required": true,
+            "type": "base58"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/anchorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/block/last": {
+      "get": {
+        "description": "Returns the latest produced block from the LTO Network.",
+        "tags": [
+          "block"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/blockResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/block/last/{amount}": {
+      "get": {
+        "description": "Returns the last 1-1000 blocks from the LTO network.",
+        "tags": [
+          "block"
+        ],
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "path",
+            "description": "A valid integer between 1 and 1000.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/blockResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/block/{start}/{end}": {
+      "get": {
+        "description": "Returns the last 1-1000 blocks from the LTO network.",
+        "tags": [
+          "block"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "path",
+            "description": "A valid block index from the LTO network.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "end",
+            "in": "path",
+            "description": "A valid block index from the LTO network.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/blockResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/block/unconfirmed": {
+      "get": {
+        "description": "Returns unconfirmed blocks from the LTO network.",
+        "tags": [
+          "block"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/blockResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/block/{id}": {
+      "get": {
+        "description": "Returns the a specific block from the LTO network.",
+        "tags": [
+          "block"
+        ],
+        "parameters": [
+          {
+            "name": "index",
+            "in": "path",
+            "description": "A valid block index from the LTO network.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/blockResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/consensus/block/{id}": {
+      "get": {
+        "description": "Returns the consensus from a specified block from the LTO network.",
+        "tags": [
+          "consensus"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid block index from the LTO network.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/consensusResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/consensus/target/{start}/{end}": {
+      "get": {
+        "description": "Returns the consensus between a target range from the LTO network.",
+        "tags": [
+          "consensus"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "path",
+            "description": "A valid consensus target from the LTO network.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "end",
+            "in": "path",
+            "description": "A valid consensus target from the LTO network.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/consensusResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/consensus/signature/{id}": {
+      "get": {
+        "description": "Returns the consensus from a specified block from the LTO network.",
+        "tags": [
+          "consensus"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid block signature from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/consensusResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/feature/{block}": {
+      "get": {
+        "description": "Returns the features from a specified block from the LTO network.",
+        "tags": [
+          "feature"
+        ],
+        "parameters": [
+          {
+            "name": "block",
+            "in": "path",
+            "description": "A valid block signature from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/featureResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/generator/all": {
+      "get": {
+        "description": "Returns all known block producers of the LTO network.",
+        "tags": [
+          "generator"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/generatorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/generator/all/{period}": {
+      "get": {
+        "description": "Returns all known block producers from a period of the LTO network.",
+        "tags": [
+          "generator"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "path",
+            "description": "A valid period: day, month, year",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/generatorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/lease/all/": {
+      "get": {
+        "description": "Returns all known leases of the LTO network.",
+        "tags": [
+          "lease"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/leaseResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/lease/transaction/{id}": {
+      "get": {
+        "description": "Returns the lease to the corresponding identified transaction id.",
+        "tags": [
+          "lease"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid transaction id from the LTO network",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/leaseResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/peer/all/": {
+      "get": {
+        "description": "Returns all known peers of the LTO network.",
+        "tags": [
+          "peer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/peerResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/peer/{address}": {
+      "get": {
+        "description": "Returns a known peer by address from the LTO network.",
+        "tags": [
+          "peer"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "A valid LTO address.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/peerResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/peer/all/{period}": {
+      "get": {
+        "description": "Returns all known peers from a period of the LTO network.",
+        "tags": [
+          "peer"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "path",
+            "description": "A valid period: day, month, year",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/generatorResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/proof/{anchor}": {
+      "get": {
+        "description": "Returns data on a LTO network proof.",
+        "tags": [
+          "proof"
+        ],
+        "parameters": [
+          {
+            "name": "proof",
+            "in": "path",
+            "description": "A valid LTO proof.",
+            "required": true,
+            "type": "base58"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/proofResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/proof/transaction/{id}": {
+      "get": {
+        "description": "Returns data on a LTO network proof.",
+        "tags": [
+          "proof"
+        ],
+        "parameters": [
+          {
+            "name": "transaction",
+            "in": "path",
+            "description": "A valid LTO transaction.",
+            "required": true,
+            "type": "base58"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/proofResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/unconfirmed": {
+      "get": {
+        "description": "Returns al unconfirmed transactions from the LTO network.",
+        "tags": [
+          "transaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid transaction id from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/transactionResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}": {
+      "get": {
+        "description": "Returns a transaction identified by id from the LTO network.",
+        "tags": [
+          "transaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid transaction id from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/transactionResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/block/{id}": {
+      "get": {
+        "description": "Returns all transactions in a specified block from the LTO network.",
+        "tags": [
+          "transaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "A valid block signature from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/transactionResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/transaction/address/{address}": {
+      "get": {
+        "description": "Returns all transactions for a specified address from the LTO network.",
+        "tags": [
+          "transaction"
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "A valid address hash from the LTO network.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/transactionResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
   "definitions": {
-    "HelloWorldResponse": {
+    "addressResponse": {
       "required": [
-        "message"
+        "address",
+        "regular",
+        "generating",
+        "available",
+        "effective",
+        "updated"
       ],
       "properties": {
-        "message": {
+        "address": {
           "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "regular": {
+          "type": "number"
+        },
+        "generating": {
+          "type": "number"
+        },
+        "available": {
+          "type": "number"
+        },
+        "operationId": "proof",
+        "effective": {
+          "type": "number"
+        },
+        "updated": {
+          "type": "string"
+        }
+      }
+    },
+    "anchorResponse": {
+      "required": [
+        "tid",
+        "anchor"
+      ],
+      "properties": {
+        "tid": {
+          "type": "string"
+        },
+        "anchor": {
+          "type": "string"
+        }
+      }
+    },
+    "blockResponse": {
+      "required": [
+        "index",
+        "reference",
+        "generator",
+        "signature",
+        "size",
+        "count",
+        "fee",
+        "version",
+        "timestamp",
+        "confirmed",
+        "consensus"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "fee": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "consensus": {
+          "type": "array",
+          "items": [ "signature", "target"]
+        }
+      }
+    },
+    "consensusResponse": {
+      "required": [
+        "index",
+        "target",
+        "signature"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "target": {
+          "type": "integer"
+        },
+        "signature": {
+          "type": "string"
+        }
+      }
+    },
+    "featureResponse": {
+      "required": [
+        "index",
+        "feature"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer"
+        },
+        "feature": {
+          "type": "array",
+          "items": []
+
+        }
+      }
+    },
+    "generatorResponse": {
+      "required": [
+        "generator",
+        "pool",
+        "blocks",
+        "earnings",
+        "share"
+      ],
+      "properties": {
+        "generator": {
+          "type": "string"
+        },
+        "pool": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "integer"
+        },
+        "earnings": {
+          "type": "number"
+        },
+        "share": {
+          "type": "number"
+        }
+      }
+    },
+    "leaseResponse": {
+      "required": [
+        "id",
+        "type",
+        "blocks",
+        "sender",
+        "senderPublicKey",
+        "fee",
+        "signature",
+        "timestamp",
+        "datetime",
+        "version",
+        "leaseId"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "integer"
+        },
+        "block": {
+          "type": "integer"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "sender": {
+          "type": "string"
+        },
+        "senderPublicKey": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "fee": {
+          "type": "number"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "attachment": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "datetime": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "leaseId": {
+          "type": "string"
+        }
+      }
+    },
+    "peerResponse": {
+      "required": [
+        "address",
+        "declared",
+        "peerName",
+        "nonce",
+        "appName",
+        "ltoL",
+        "version",
+        "generator",
+        "port",
+        "api",
+        "uptime",
+        "created",
+        "updated"
+      ],
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "declared": {
+          "type": "string"
+        },
+        "peerName": {
+          "type": "string"
+        },
+        "nonce": {
+          "type": "integer"
+        },
+        "appName": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        },
+        "generator": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "api": {
+          "type": "integer"
+        },
+        "uptime": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "proofResponse": {
+      "required": [
+        "tid",
+        "proof"
+      ],
+      "properties": {
+        "tid": {
+          "type": "string"
+        },
+        "proof": {
+          "type": "string"
+        }
+      }
+    },
+    "transactionResponse": {
+      "required": [
+        "id",
+        "type",
+        "blocks",
+        "recipient",
+        "fee",
+        "signature",
+        "timestamp",
+        "datetime",
+        "version",
+        "leaseId",
+        "confirmed"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "integer"
+        },
+        "block": {
+          "type": "integer"
+        },
+        "recipient": {
+          "type": "string"
+        },
+        "sender": {
+          "type": "string"
+        },
+        "senderPublicKey": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "fee": {
+          "type": "number"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "attachment": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "datetime": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "leaseId": {
+          "type": "string"
+        },
+        "confirmed": {
+          "type": "integer"
         }
       }
     },

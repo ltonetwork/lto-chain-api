@@ -29,12 +29,13 @@ router.get('/last', async function (req, res, next) {
   }
 })
 
-router.get('/last/:index',
+router.get('/last/:amount',
   [
-    check('index')
+    check('amount')
       .not().isEmpty()
       .isInt({
-        min: 1
+        min: 1,
+        max: 1000
       })
   ],
   validateInput,
@@ -45,7 +46,7 @@ router.get('/last/:index',
       // .innerJoin('transactions', 'blocks.index', 'transactions.block')
         .select(db.raw('blocks.index, blocks.reference, blocks.generator, blocks.signature, blocks.size, blocks.count, blocks.fee, blocks.version, blocks.timestamp, blocks.confirmed, consensus.signature, consensus.target'))
         .orderBy('blocks.index', 'desc')
-        .limit(req.params.index)
+        .limit(req.params.amount)
         .options({
           nestTables: true
         })
