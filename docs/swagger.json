@@ -760,7 +760,8 @@
           }
         }
       }
-    },
+    }
+  },
   "definitions": {
     "addressResponse": {
       "required": [
