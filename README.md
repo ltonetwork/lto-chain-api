@@ -18,7 +18,6 @@ This node.js project is the frontend API for [LTO Chain Cache Collector](https:/
 - `/v1/lease/`
 - `/v1/generator/`
 - `/v1/address/`
-- `/v1/peer/`
 - `/v1/stats/`
 
 ## .env example

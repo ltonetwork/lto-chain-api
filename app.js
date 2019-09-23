@@ -85,7 +85,6 @@ app.use('/v1/anchor', require('./routes/anchor'))
 app.use('/v1/lease', require('./routes/lease'))
 app.use('/v1/generator', require('./routes/generator'))
 app.use('/v1/address', require('./routes/address'))
-app.use('/v1/peer', require('./routes/peer'))
 app.use('/v1/stats', require('./routes/stats'))
 
 // Error Handling
