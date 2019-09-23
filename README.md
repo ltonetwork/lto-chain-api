@@ -23,7 +23,7 @@ This node.js project is the frontend API for [LTO Chain Cache Collector](https:/
 
 ## .env example
 ```
-APP_PORT=9000
+APP_PORT=9001
 APP_SECRET=secret
 
 DB_HOST=localhost
