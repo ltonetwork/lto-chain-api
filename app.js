@@ -11,6 +11,7 @@ const Helmet = require('helmet')
 const Compression = require('compression')
 const cors = require('cors')
 const logger = require('morgan')
+const figlet = require('figlet')
 
 app.use(function (req, res, next) {
   res.locals.session = req.session
@@ -40,11 +41,17 @@ app.use(validator())
 
 // Public Routes
 app.all('/',
-  rateLimiter,
-  function (req, res, next) {
-    res.set('Content-Type', 'application/json')
-    res.status(200).json('LTO Chain Cache API')
+rateLimiter,
+function (req, res, next) {
+      
+  figlet('LTO Chain Cache API', function(err, data) {
+    res.set('Content-Type', 'text/plain')
+    res.status(200).send(`${data} v1.0 \n
+      panel: lto.cloud
+      docs: /v1/docs
+      `)
   })
+})
 
 
 // Setup Swagger docs
