@@ -5,7 +5,7 @@ This node.js project is the frontend API for [LTO Chain Cache Collector](https:/
 - Node.js v8+
 - [knex.js](http://knexjs.org) supported database (pg, sqlite3, mysql, mysql2, oracle, mssql)
 - NGINX / Apache
-- [LTO Chain Cache Collector](https://github.com/fexra/lto-chain-cache-collector)
+- [LTO Chain Cache Collector](https://github.com/bbjansen/lto-cache-collector)
 
 ## API Routes
 - `/v1/block/`
