@@ -134,6 +134,46 @@ router.get('/transaction/:period',
         scale = '%Y-%m'
       }
 
+        const getData = await db('transactions')
+        .select(db.raw('date_format(datetime, "' + scale + '") as period, type'))
+        .count('* as count')
+        .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+        .groupByRaw('date_format(datetime, "' + scale + '")')
+        .groupBy('type')
+
+      res.status(200).json(getData)
+    } catch (err) {
+      next(err)
+    }
+  })
+
+
+// Get detailed transactions count by period
+router.get('/transaction/detailed/:period',
+  [
+    check('period')
+      .not().isEmpty()
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      let range
+      let scale
+
+      if (req.params.period === 'day') {
+        range = 'day'
+        scale = '%Y-%m-%d %H'
+      } else if (req.params.period === 'week') {
+        range = 'week'
+        scale = '%Y-%m-%d'
+      } else if (req.params.period === 'month') {
+        range = 'month'
+        scale = '%Y-%m-%d'
+      } else if (req.params.period === 'year') {
+        range = 'year'
+        scale = '%Y-%m'
+      }
+
       const countTxns = await db('transactions')
         .count('* as count')
         .where('type', 4)
