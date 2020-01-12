@@ -47,9 +47,6 @@ router.get('/last/:amount',
         .select(db.raw('blocks.index, blocks.reference, blocks.generator, blocks.signature, blocks.size, blocks.count, blocks.fee, blocks.version, blocks.timestamp, blocks.confirmed, consensus.signature, consensus.target'))
         .orderBy('blocks.index', 'desc')
         .limit(req.params.amount)
-        .options({
-          nestTables: true
-        })
 
       res.status(200).json(getBlocks)
     } catch (err) {
