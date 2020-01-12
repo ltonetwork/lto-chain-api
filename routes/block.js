@@ -18,9 +18,6 @@ router.get('/last', async function (req, res, next) {
       .select(db.raw('blocks.index, blocks.reference, blocks.generator, blocks.signature, blocks.size, blocks.count, blocks.fee, blocks.version, blocks.timestamp, blocks.confirmed, consensus.signature, consensus.target'))
       .orderBy('blocks.index', 'desc')
       .limit(1)
-      .options({
-        nestTables: true
-      })
 
     res.status(200).json(getBlock[0])
   } catch (err) {
@@ -55,6 +52,32 @@ router.get('/last/:amount',
     }
   })
 
+// Get block by generator address
+router.get('/address/:address',
+  [
+    check('address')
+      .not().isEmpty()
+      .isLength({
+        min: 35,
+        max: 35
+      })
+  ],
+  validateInput,
+  async function (req, res, next) {
+    try {
+      const getBlock = await db('blocks')
+        .leftJoin('consensus', 'blocks.index', 'consensus.index')
+      // .innerJoin('transactions', 'blocks.index', 'transactions.block')
+        .select(db.raw('blocks.index, blocks.reference, blocks.generator, blocks.signature, blocks.size, blocks.count, blocks.fee, blocks.version, blocks.timestamp, blocks.confirmed, consensus.signature, consensus.target'))
+        .where('generator', req.params.address)
+        .orderBy('blocks.index', 'desc')
+
+      res.status(200).json(getBlock)
+    } catch (err) {
+      next(err)
+    }
+  })
+
 // Block Range
 router.get('/:start/:end',
   [
@@ -80,40 +103,8 @@ router.get('/:start/:end',
         .whereBetween('blocks.index', [req.params.start, req.params.end])
         .orderBy('blocks.index', 'desc')
         .limit(1000)
-        .options({
-          nestTables: true
-        })
 
       res.status(200).json(getBlocks)
-    } catch (err) {
-      next(err)
-    }
-  })
-
-// Get block by generator address
-router.get('/address/:address',
-  [
-    check('address')
-      .not().isEmpty()
-      .isLength({
-        min: 35,
-        max: 35
-      })
-  ],
-  validateInput,
-  async function (req, res, next) {
-    try {
-      const getBlock = await db('blocks')
-        .leftJoin('consensus', 'blocks.index', 'consensus.index')
-      // .innerJoin('transactions', 'blocks.index', 'transactions.block')
-        .select(db.raw('blocks.index, blocks.reference, blocks.generator, blocks.signature, blocks.size, blocks.count, blocks.fee, blocks.version, blocks.timestamp, blocks.confirmed, consensus.signature, consensus.target'))
-        .where('generator', req.params.address)
-        .orderBy('blocks.index', 'desc')
-        .options({
-          nestTables: true
-        })
-
-      res.status(200).json(getBlock)
     } catch (err) {
       next(err)
     }
@@ -130,9 +121,6 @@ router.get('/unconfirmed', async function (req, res, next) {
       .where('blocks.confirmed', false)
       .orderBy('blocks.index', 'desc')
       .limit(1000)
-      .options({
-        nestTables: true
-      })
 
     res.status(200).json(getBlocks)
   } catch (err) {
@@ -160,9 +148,6 @@ router.get('/:index',
         .where('blocks.index', req.params.index)
         .orderBy('blocks.index', 'desc')
         .limit(1)
-        .options({
-          nestTables: true
-        })
 
       res.status(200).json(getBlock[0])
     } catch (err) {
