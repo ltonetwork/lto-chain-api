@@ -48,6 +48,37 @@
         }
       }
     },
+    "/top/{amount}": {
+      "get": {
+        "description": "Returns top holders sorted by regular balance.",
+        "tags": [
+          "address"
+        ],
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "path",
+            "description": "A valid integer between 1 and 1000.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/addressResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
     "/anchor/{anchor}": {
       "get": {
         "description": "Returns data on a LTO anchor.",
