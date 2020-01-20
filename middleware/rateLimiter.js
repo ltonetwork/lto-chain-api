@@ -13,7 +13,7 @@ const ready = err => {
 }
 const RateLimiter = new RateLimiterMemory({
   storeClient: db,
-  storeType: `knex`,
+  storeType: 'knex',
   dbName: process.env.DB_NAME,
   tableName: 'limiter',
   points: process.env.LIMIT_TOTAL,
