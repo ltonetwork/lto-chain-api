@@ -29,7 +29,7 @@ router.get('/:id',
   check('id')
     .not().isEmpty()
     .isLength({
-      min: 44,
+      min: 43,
       max: 44
     })
 ],
