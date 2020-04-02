@@ -18,7 +18,7 @@ router.get('/all', async function (req, res, next) {
       .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
-      .where('blocks.confirmed', true)
+      .where('blocks.verified', true)
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')
 
@@ -62,7 +62,7 @@ async function (req, res, next) {
       .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
-      .where('blocks.confirmed', true)
+      .where('blocks.verified', true)
       .whereBetween('blocks.datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')

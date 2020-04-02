@@ -232,9 +232,9 @@
         }
       }
     },
-    "/block/unconfirmed": {
+    "/block/unverified": {
       "get": {
-        "description": "Returns unconfirmed blocks from the LTO network.",
+        "description": "Returns unverified blocks from the LTO network.",
         "tags": [
           "block"
         ],
@@ -584,9 +584,9 @@
         }
       }
     },
-    "/transaction/unconfirmed": {
+    "/transaction/unverified": {
       "get": {
-        "description": "Returns al unconfirmed transactions from the LTO network.",
+        "description": "Returns al unverified transactions from the LTO network.",
         "tags": [
           "transaction"
         ],
@@ -772,7 +772,7 @@
         "fee",
         "version",
         "timestamp",
-        "confirmed",
+        "verified",
         "consensus"
       ],
       "properties": {
@@ -960,7 +960,7 @@
         "datetime",
         "version",
         "leaseId",
-        "confirmed"
+        "verified"
       ],
       "properties": {
         "id": {
@@ -1005,7 +1005,7 @@
         "leaseId": {
           "type": "string"
         },
-        "confirmed": {
+        "verified": {
           "type": "integer"
         }
       }

@@ -9,12 +9,12 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
-// Get unconfirmed transactions
-router.get('/unconfirmed', async function (req, res, next) {
+// Get unverified transactions
+router.get('/unverified', async function (req, res, next) {
   try {
     const getTx = await db('transactions')
       .select()
-      .where('confirmed', false)
+      .where('verified', false)
       .orderBy('datetime', 'desc')
 
     res.status(200).json(getTx)
@@ -150,7 +150,7 @@ router.get('/sender/all', async function (req, res, next) {
       .leftJoin('addresses', 'transactions.sender', 'addresses.address')
       .select('addresses.address')
       .count('transactions.id as transactions')
-      .where('transactions.confirmed', true)
+      .where('transactions.verified', true)
       .groupBy('addresses.address')
       .orderBy('transactions', 'desc')
 
@@ -175,7 +175,7 @@ router.get('/recipient/all', async function (req, res, next) {
       .leftJoin('addresses', 'transactions.recipient', 'addresses.address')
       .select('addresses.address')
       .count('transactions.id as transactions')
-      .where('transactions.confirmed', true)
+      .where('transactions.verified', true)
       .whereNotNull('transactions.recipient')
       .groupBy('addresses.address')
       .orderBy('transactions', 'desc')
