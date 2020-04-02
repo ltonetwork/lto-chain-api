@@ -13,11 +13,16 @@ const knex = module.exports = require('knex')({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
     charset: 'utf8'
-    // multipleStatements: true
   },
   pool: {
     min: 2,
-    max: 100
+    max: 151,
+//    createTimeoutMillis: 30000,
+//    acquireTimeoutMillis: 100000,
+//    idleTimeoutMillis: 30000,
+//    reapIntervalMillis: 1000,
+//    createRetryIntervalMillis: 1000,
+    propagateCreateError: false
   }
 })
 
