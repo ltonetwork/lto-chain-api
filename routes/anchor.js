@@ -24,7 +24,7 @@ router.get('/:anchor',
     try {
       const getAnchor = await db('anchors')
         .select('tid', 'anchor')
-        .where('anchor', req.params.anchor)
+        .where('anchors', req.params.anchor)
 
       res.status(200).json(getAnchor)
     } catch (err) {

@@ -24,7 +24,7 @@ router.get('/:proof',
     try {
       const getProof = await db('proofs')
         .select('tid', 'proof')
-        .where('proof', req.params.proof)
+        .where('proofs', req.params.proof)
 
       res.json(getProof)
     } catch (err) {
