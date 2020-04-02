@@ -136,7 +136,7 @@ async function (req, res, next) {
 
       const getData = await db('transactions')
       .select(db.raw('date_format(datetime, "' + scale + '") as period'))
-      .count('* as count')
+      .count('id as count')
       .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
       .groupByRaw('date_format(datetime, "' + scale + '")')
 
