@@ -885,7 +885,6 @@
         "fee",
         "signature",
         "timestamp",
-        "datetime",
         "version",
         "leaseId"
       ],
@@ -923,9 +922,6 @@
         "timestamp": {
           "type": "integer"
         },
-        "datetime": {
-          "type": "string"
-        },
         "version": {
           "type": "integer"
         },
@@ -957,7 +953,6 @@
         "fee",
         "signature",
         "timestamp",
-        "datetime",
         "version",
         "leaseId",
         "verified"
@@ -995,9 +990,6 @@
         },
         "timestamp": {
           "type": "integer"
-        },
-        "datetime": {
-          "type": "string"
         },
         "version": {
           "type": "integer"

@@ -135,10 +135,10 @@ async function (req, res, next) {
     }
 
       const getData = await db('transactions')
-      .select(db.raw('date_format(datetime, "' + scale + '") as period'))
+      .select(db.raw('from_unixtime(timestamp, "' + scale + '") as period'))
       .count('id as count')
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-      .groupByRaw('date_format(datetime, "' + scale + '")')
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .groupByRaw('from_unixtime(timestamp, "' + scale + '")')
 
     res.status(200).json(getData)
   } catch (err) {
@@ -173,10 +173,10 @@ async function (req, res, next) {
     }
 
       const getData = await db('transactions')
-      .select(db.raw('date_format(datetime, "' + scale + '") as period, type'))
-      .count('* as count')
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-      .groupByRaw('date_format(datetime, "' + scale + '")')
+      .select(db.raw('from_unixtime(timestamp, "' + scale + '") as period, type'))
+      .count('id as count')
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .groupByRaw('from_unixtime(timestamp, "' + scale + '")')
       .groupBy('type')
 
     res.status(200).json(getData)
@@ -215,40 +215,40 @@ async function (req, res, next) {
     const countTxns = await db('transactions')
       .count('* as count')
       .where('type', 4)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
     const countAnchors = await db('transactions')
       .count('* as count')
       .where('type', 15)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
     const countStartLease = await db('transactions')
       .count('* as count')
       .where('type', 8)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
     const countCancelLease = await db('transactions')
       .count('* as count')
       .where('type', 9)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
     const countMassTx = await db('transactions')
       .count('* as count')
       .select()
       .where('type', 11)
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
 
     const countMassTransfers = await db('transfers')
       .leftOuterJoin('transactions', 'transfers.tid', 'transactions.id')
       .count('* as count')
-      .whereBetween('transactions.datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('transactions.timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
     // .groupBy('transfers.tid')
 
     const getData = await db('transactions')
-      .select(db.raw('date_format(datetime, "' + scale + '") as period, type'))
+      .select(db.raw('from_unixtime(timestamp, "' + scale + '") as period, type'))
       .count('* as count')
-      .whereBetween('datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
-      .groupByRaw('date_format(datetime, "' + scale + '")')
+      .whereBetween('timestamp', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .groupByRaw('from_unixtime(timestamp, "' + scale + '")')
       .groupBy('type')
 
     // Sort data by period and type, thanks IBMC <3
