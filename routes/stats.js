@@ -49,8 +49,6 @@ async function (req, res, next) {
       format = '%Y-%m-00 00:00:00'
     }
 
-    console.log(format)
-
     const data = await db('transactions')
     //.select(db.raw(range + '(from_unixtime(timestamp / 1000)) as date'))
     .select(db.raw('date_format(from_unixtime(timestamp / 1000), "' + format + '") as period'))
