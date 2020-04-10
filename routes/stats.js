@@ -50,7 +50,6 @@ async function (req, res, next) {
     }
 
     const data = await db('transactions')
-    //.select(db.raw(range + '(from_unixtime(timestamp / 1000)) as date'))
     .select(db.raw('date_format(from_unixtime(timestamp / 1000), "' + format + '") as period'))
     .count('id as count')
     .whereBetween('timestamp', [req.params.start, req.params.end])
