@@ -18,7 +18,6 @@ router.get('/all', async function (req, res, next) {
       .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
-      .where('blocks.verified', true)
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')
 
@@ -52,7 +51,6 @@ async function (req, res, next) {
       .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
-      .where('blocks.verified', true)
       .whereBetween('blocks.timestamp', [req.params.start, req.params.end])
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')
