@@ -10,7 +10,6 @@ const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const moment = require('moment')
 
-
 // Get transactions count between two dates
 router.get('/transaction/:start/:end',
 [

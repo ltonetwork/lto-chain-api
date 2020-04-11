@@ -15,7 +15,7 @@ router.get('/unverified', async function (req, res, next) {
     const getTx = await db('transactions')
       .select()
       .where('verified', false)
-      .orderBy('datetime', 'desc')
+      .orderBy('timestamp', 'desc')
 
     res.status(200).json(getTx)
   } catch (err) {

@@ -63,7 +63,7 @@ async function (req, res, next) {
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
       .where('blocks.verified', true)
-      .whereBetween('blocks.datetime', [moment().subtract(1, range).format('YYYY-MM-DD HH:mm:ss'), moment().format('YYYY-MM-DD HH:mm:ss')])
+      .whereBetween('blocks.timestamp', [moment().subtract(1, range).format('x'), moment().format('x')])
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')
 
