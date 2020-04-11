@@ -95,11 +95,7 @@ async function (req, res, next) {
 // Get transactions by block index
 router.get('/block/:index',
 [
-  check('index')
-    .not().isEmpty()
-    .isInt({
-      min: 1
-    })
+  check('index').not().isEmpty().isInt({ min: 1 })
 ],
 validateInput,
 async function (req, res, next) {
@@ -118,11 +114,7 @@ async function (req, res, next) {
 router.get('/address/:address',
 [
   check('address')
-    .not().isEmpty()
-    .isLength({
-      min: 35,
-      max: 35
-    })
+    .not().isEmpty().isLength({ min: 35, max: 35 })
 ],
 validateInput,
 async function (req, res, next) {
@@ -175,12 +167,12 @@ router.get('/recipient/all', async function (req, res, next) {
       .leftJoin('addresses', 'transactions.recipient', 'addresses.address')
       .select('addresses.address')
       .count('transactions.id as transactions')
-      .where('transactions.verified', true)
+      .where('transactions.verified', false)
       .whereNotNull('transactions.recipient')
       .groupBy('addresses.address')
       .orderBy('transactions', 'desc')
 
-    let total = getAddresses.reduce((transactions, address, index, addregetAddressessses) => {
+    let total = getAddresses.reduce((transactions, address, index, addresses) => {
       return transactions += address.transactions
     }, 0)
 

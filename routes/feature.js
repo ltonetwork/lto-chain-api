@@ -13,19 +13,19 @@ const db = require('../utils/utils').knex
 router.get('/:index',
   [
     check('index')
-      .not().isEmpty()
-      .isInt({
-        min: 1
-      })
+      .not().isEmpty().isInt({ min: 1 })
   ],
   validateInput,
   async function (req, res, next) {
     try {
       const getFeatures = await db('features')
-        .select('index', 'feature')
+        .select()
         .where('index', req.params.index)
+        .limit(1)
 
-      res.json(getFeatures)
+        getFeatures[0].features = JSON.parse(getFeatures[0].features)
+
+      res.json(getFeatures[0])
     } catch (err) {
       next(err)
     }

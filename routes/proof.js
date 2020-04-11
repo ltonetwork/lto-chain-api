@@ -9,47 +9,22 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
-// Get proof by id
-router.get('/:proof',
-  [
-    check('proof')
-      .not().isEmpty()
-      .isLength({
-        min: 88,
-        max: 88
-      })
-  ],
-  validateInput,
-  async function (req, res, next) {
-    try {
-      const getProof = await db('proofs')
-        .select('tid', 'proof')
-        .where('proofs', req.params.proof)
-
-      res.json(getProof)
-    } catch (err) {
-      next(err)
-    }
-  })
-
 // Get proof by tid
 router.get('/transaction/:id',
   [
-    check('id')
-      .not().isEmpty()
-      .isLength({
-        min: 44,
-        max: 44
-      })
+    check('id').not().isEmpty().isLength({ min: 44, max: 44 })
   ],
   validateInput,
   async function (req, res, next) {
     try {
-      const getProof = await db('proofs')
-        .select('tid', 'proof')
+      const getProofs = await db('proofs')
+        .select('tid', 'proofs')
         .where('tid', req.params.id)
+        .limit(1)
 
-      res.status(200).json(getProof)
+        getProofs[0].proofs = JSON.parse(getProofs[0].proofs)
+
+      res.status(200).json(getProofs[0])
     } catch (err) {
       next(err)
     }

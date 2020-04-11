@@ -9,47 +9,23 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 
-// Get anchor by id
-router.get('/:anchor',
-  [
-    check('anchor')
-      .not().isEmpty()
-      .isLength({
-        min: 44,
-        max: 88
-      })
-  ],
-  validateInput,
-  async function (req, res, next) {
-    try {
-      const getAnchor = await db('anchors')
-        .select('tid', 'anchor')
-        .where('anchors', req.params.anchor)
 
-      res.status(200).json(getAnchor)
-    } catch (err) {
-      next(err)
-    }
-  })
-
-// Get anchor by tid
 router.get('/transaction/:id',
   [
-    check('id')
-      .not().isEmpty()
-      .isLength({
-        min: 44,
-        max: 44
-      })
+    check('id').not().isEmpty().isLength({ min: 44, max: 88 })
+
   ],
   validateInput,
   async function (req, res, next) {
     try {
-      const getAnchor = await db('anchors')
-        .select('tid', 'anchor')
+      const getAnchors = await db('anchors')
+        .select()
         .where('tid', req.params.id)
+        .limit(1)
 
-      res.status(200).json(getAnchor)
+      getAnchors[0].anchors = JSON.parse(getAnchors[0].anchors)
+
+      res.status(200).json(getAnchors[0])
     } catch (err) {
       next(err)
     }

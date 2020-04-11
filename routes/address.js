@@ -13,11 +13,7 @@ const db = require('../utils/utils').knex
 router.get('/:address',
 [
   check('address')
-    .not().isEmpty()
-    .isLength({
-      min: 35,
-      max: 35
-    })
+    .not().isEmpty().isLength({ min: 35, max: 35 })
 ],
 validateInput,
 async function (req, res, next) {
@@ -38,17 +34,13 @@ async function (req, res, next) {
 router.get('/top/:amount',
 [
   check('amount')
-    .not().isEmpty()
-    .isInt({
-      min: 1,
-      max: 1000
-    })
+    .not().isEmpty().isInt({ min: 1, max: 1000 })
 ],
 validateInput,
 async function (req, res, next) {
   try {
     const getTop = await db('addresses')
-      .select(db.raw('*, date_format(updated,"%Y-%m-%d %h:%i:%s") as updated'))
+      .select()
       .orderBy('regular', 'desc')
       .limit(req.params.amount)
 

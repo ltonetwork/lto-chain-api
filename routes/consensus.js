@@ -59,7 +59,7 @@ router.get('/signature/:signature',
         .select()
         .where('signature', req.params.signature)
 
-      res.status(200).json(getConsensus)
+      res.status(200).json(getConsensus[0])
     } catch (err) {
       next(err)
     }
