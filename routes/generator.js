@@ -10,7 +10,7 @@ const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const moment = require('moment')
 
-// Get generators stats (all time)
+// Get generators stats total
 router.get('/all', async function (req, res, next) {
   try {
     const generators = await db('blocks')
@@ -37,25 +37,15 @@ router.get('/all', async function (req, res, next) {
 })
 
 // Get generators stats (day)
-router.get('/all/:period',
+router.get('/all/:start/:end',
 [
-  check('period')
-    .not().isEmpty()
+  check('start').not().isEmpty(),
+  check('end').not().isEmpty(),
+
 ],
 validateInput,
 async function (req, res, next) {
   try {
-    let range
-
-    if (req.params.period === 'day') {
-      range = 'days'
-    } else if (req.params.period === 'week') {
-      range = 'week'
-    } else if (req.params.period === 'month') {
-      range = 'month'
-    } else if (req.params.period === 'year') {
-      range = 'year'
-    }
 
     const generators = await db('blocks')
       .leftJoin('addresses', 'blocks.generator', 'addresses.address')
@@ -63,7 +53,7 @@ async function (req, res, next) {
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
       .where('blocks.verified', true)
-      .whereBetween('blocks.timestamp', [moment().subtract(1, range).format('x'), moment().format('x')])
+      .whereBetween('blocks.timestamp', [req.params.start, req.params.end])
       .groupBy('blocks.generator')
       .orderBy('blocks', 'desc')
 
