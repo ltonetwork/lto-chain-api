@@ -42,7 +42,8 @@ async function (req, res, next) {
   try {
     const getBlocks = await db('blocks')
       //.leftJoin('consensus', 'blocks.index', 'consensus.index')
-      .select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      //.select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      .select()
       .orderBy('blocks.index', 'desc')
       .limit(req.params.amount)
 
@@ -68,7 +69,8 @@ async function (req, res, next) {
   try {
     const getBlock = await db('blocks')
       //.leftJoin('consensus', 'blocks.index', 'consensus.index')
-      .select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      //.select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      .select()
       .where('generator', req.params.address)
       .orderBy('blocks.index', 'desc')
 
@@ -89,7 +91,8 @@ async function (req, res, next) {
   try {
     const getBlocks = await db('blocks')
       //.leftJoin('consensus', 'blocks.index', 'consensus.index')
-      .select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      //.select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      .select()
       .whereBetween('blocks.index', [req.params.start, req.params.end])
       .orderBy('blocks.index', 'desc')
       .limit(1000)
@@ -105,7 +108,8 @@ router.get('/unverified', async function (req, res, next) {
   try {
     const getBlocks = await db('blocks')
       //.leftJoin('consensus', 'blocks.index', 'consensus.index')
-      .select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      //.select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      .select()
       .whereRaw('blocks.timestamp > NOW() - INTERVAL 90 MINUTE')
       .where('blocks.verified', false)
       .orderBy('blocks.index', 'desc')
@@ -128,7 +132,8 @@ async function (req, res, next) {
   try {
     const getBlock = await db('blocks')
       //.leftJoin('consensus', 'blocks.index', 'consensus.index')
-      .select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      //.select('blocks.index', 'blocks.reference', 'blocks.generator', 'blocks.signature', 'blocks.size', 'blocks.count', 'blocks.fee', 'blocks.version', 'blocks.timestamp', 'blocks.verified', 'consensus.signature', 'consensus.target')
+      .select()
       .where('blocks.index', req.params.index)
       .orderBy('blocks.index', 'desc')
       .limit(1)
