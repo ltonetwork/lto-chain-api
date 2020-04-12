@@ -15,7 +15,7 @@ router.get('/all', async function (req, res, next) {
   try {
     const generators = await db('blocks')
       .leftJoin('addresses', 'blocks.generator', 'addresses.address')
-      .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
+      .select('blocks.generator', 'addresses.generating as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
       .groupBy('blocks.generator')
@@ -48,7 +48,7 @@ async function (req, res, next) {
 
     const generators = await db('blocks')
       .leftJoin('addresses', 'blocks.generator', 'addresses.address')
-      .select('blocks.generator', 'addresses.effective as pool', 'addresses.label', 'addresses.url')
+      .select('blocks.generator', 'addresses.generating as pool', 'addresses.label', 'addresses.url')
       .count('blocks.index as blocks')
       .sum('blocks.fee as earnings')
       .whereBetween('blocks.timestamp', [req.params.start, req.params.end])
