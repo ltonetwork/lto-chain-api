@@ -1,11 +1,11 @@
 # LTO Chain Cache API
-This node.js project is the frontend API for [LTO Chain Cache Collector](https://github.com/fexra/lto-chain-cache-collector). It allows you to query the database cache.
+This node.js project is the frontend API for [LTO Chain Collector](https://github.com/fexra/lto-chain-collector). It allows you to query the database cache.
 
 ## Requirements
 - Node.js v8+
 - [knex.js](http://knexjs.org) supported database (pg, sqlite3, mysql, mysql2, oracle, mssql)
 - NGINX / Apache
-- [LTO Chain Cache Collector](https://github.com/bbjansen/lto-cache-collector)
+- [LTO Chain Collector](https://github.com/fexra/lto-chain-collector)
 
 ## API Routes
 - `/v1/block/`
