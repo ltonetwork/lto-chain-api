@@ -5,7 +5,7 @@
 
 const knex = module.exports = require('knex')({
   client: 'mysql',
-  debug: true,
+  // debug: true,
   // timezone: 'UTC',
   connection: {
     host: process.env.DB_HOST,
