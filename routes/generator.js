@@ -9,6 +9,7 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const moment = require('moment')
+const axios = require('axios')
 
 // Get generators stats total
 router.get('/all', async function (req, res, next) {
@@ -64,6 +65,34 @@ async function (req, res, next) {
     })
 
     res.status(200).json(generators)
+  } catch (err) {
+    next(err)
+  }
+})
+
+
+// Get generators stats (weekly)  from lto.tools
+router.get('/staking/weekly',
+validateInput,
+async function (req, res, next) {
+  try {
+    const staking = await axios.get('https://lto.tools/generators-weekly/json')
+
+    res.status(200).json(staking.data)
+  } catch (err) {
+    next(err)
+  }
+})
+
+
+// Get generators stats (monthly)  from lto.tools
+router.get('/staking/monthly',
+validateInput,
+async function (req, res, next) {
+  try {
+    const staking = await axios.get('https://lto.tools/generators-monthly/json')
+
+    res.status(200).json(staking.data)
   } catch (err) {
     next(err)
   }
