@@ -36,11 +36,11 @@ async function (req, res, next) {
 
       format = '%Y-%m-%d 00:00:00'
     }
-    else if ((difference > 7) && (difference <= moment().daysInMonth()))  { // Month granularity -> day
+    else if ((difference > 7) && (difference <= 31))  { // Month granularity -> day
       
       format = '%Y-%m-%d 00:00:00'
     }
-    else if ((difference > moment().daysInMonth()) && (difference <= 366))  { // Year granularity -> month
+    else if ((difference > 31) && (difference <= 366))  { // Year granularity -> month
       
       format = '%Y-%m-00 00:00:00'
     }
