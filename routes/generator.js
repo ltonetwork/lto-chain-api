@@ -8,7 +8,6 @@ const router = express.Router()
 const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
-const moment = require('moment')
 const axios = require('axios')
 
 // Get generators stats total

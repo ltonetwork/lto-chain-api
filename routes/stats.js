@@ -9,6 +9,24 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const moment = require('moment')
+const axios = require('axios')
+
+// Get total burned 
+// Get generators stats (monthly)  from lto.tools
+router.get('/burned/total',
+validateInput,
+async function (req, res, next) {
+  try {
+    const ping = await axios.get('https://lto.tools/balances/json')
+
+    const burned = 500000000 - ping.data.totalBalance
+
+    res.status(200).json(burned)
+  } catch (err) {
+    next(err)
+  }
+})
+
 
 // Get transactions count between two dates
 router.get('/transaction/:type/:start/:end',
