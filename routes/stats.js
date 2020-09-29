@@ -26,9 +26,39 @@ async function (req, res, next) {
     const contractBurn = getContractBurn.data.volume.lto20.burned
 
     const burned = txBurn + bridgeBurn + contractBurn
-    console.log(burned)
 
     res.status(200).json(burned)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/supply/total',
+validateInput,
+async function (req, res, next) {
+  try {
+    const getBurn = await axios.get('https://api.lto.cloud/v1/stats/burned/total')
+
+    const supply = 500000000 - getBurn.data
+
+    res.status(200).json(supply)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/supply/circulating',
+validateInput,
+async function (req, res, next) {
+  try {
+    const getCirculating = await axios.get('https://bridge.lto.network/stats/circulating-supply')
+    const getTxBurn = await axios.get('https://lto.tools/balances/json')
+
+    const txBurn = 500000000 - getTxBurn.data.totalBalance
+
+    const circulating = getCirculating.data -txBurn
+
+    res.status(200).json(circulating)
   } catch (err) {
     next(err)
   }
