@@ -17,9 +17,16 @@ router.get('/burned/total',
 validateInput,
 async function (req, res, next) {
   try {
-    const ping = await axios.get('https://lto.tools/balances/json')
+    const getTxBurn = await axios.get('https://lto.tools/balances/json')
+    const getBridgeBurn = await axios.get('https://nodes.lto.network/addresses/balance/3JrGV6TeEV3ovVjsh9SPqQL48EDLET47B9U')
+    const getContractBurn = await axios.get('https://bridge.lto.network/stats')
 
-    const burned = 500000000 - ping.data.totalBalance
+    const txBurn = 500000000 - getTxBurn.data.totalBalance
+    const bridgeBurn = getBridgeBurn.data.balance / 100000000
+    const contractBurn = getContractBurn.data.volume.lto20.burned
+
+    const burned = txBurn + bridgeBurn + contractBurn
+    console.log(burned)
 
     res.status(200).json(burned)
   } catch (err) {
