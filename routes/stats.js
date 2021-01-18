@@ -37,7 +37,7 @@ router.get('/supply/total',
 validateInput,
 async function (req, res, next) {
   try {
-    const getBurn = await axios.get('https://api.lto.cloud/v1/stats/burned/total')
+    const getBurn = await axios.get('https://stats.ltonetwork.com/v1/stats/burned/total')
 
     const supply = 500000000 - getBurn.data
 
@@ -64,6 +64,18 @@ async function (req, res, next) {
   }
 })
 
+router.get('/nodes/',
+validateInput,
+async function (req, res, next) {
+  try {
+    const getNodes = await axios.get('https://lto.tools/nodes/json')
+
+    const nodes = getNodes.data
+
+    res.status(200).json(nodes)
+  } catch (err) {
+    next(err)
+  }
 
 // Get transactions count between two dates
 router.get('/transaction/:type/:start/:end',
