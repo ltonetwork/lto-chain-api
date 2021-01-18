@@ -76,6 +76,7 @@ async function (req, res, next) {
   } catch (err) {
     next(err)
   }
+})
 
 // Get transactions count between two dates
 router.get('/transaction/:type/:start/:end',
