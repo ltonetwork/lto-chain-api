@@ -69,6 +69,25 @@ async function (req, res, next) {
   }
 })
 
+async function addLabels(generators) {
+  const response = await axios.get('https://raw.githubusercontent.com/ltonetwork/lto-wallet/master/src/communityNodes.json')
+  
+  let map = {
+    "3Jfb7VJzmJjXyQDQ5Nw8R7G2MiasM5fm3Uy": { name: "Binance", payout: null },
+    "3JbZnF1i9rwab8YwBdGeNeAZhmcKzFfibUf": { name: "AscendEX", payout: null }
+  }
+  response.data.nodes.forEach(node => map[node.address] = node)
+  
+  generators.forEach(generator => {
+    const node = map[generator.generator] || { name: null, payout: null }
+    
+    generator.label = node.name
+    generator.payout = node.sharing + ' - ' + node.payoutSchedule
+  })
+  
+  return generators
+}
+
 
 // Get generators stats (weekly)  from lto.tools
 router.get('/staking/weekly',
@@ -76,8 +95,9 @@ validateInput,
 async function (req, res, next) {
   try {
     const staking = await axios.get('https://lto.tools/generators-weekly/json')
+    const generators = await addLabels(staking.data)
 
-    res.status(200).json(staking.data)
+    res.status(200).json(generators)
   } catch (err) {
     next(err)
   }
@@ -90,8 +110,9 @@ validateInput,
 async function (req, res, next) {
   try {
     const staking = await axios.get('https://lto.tools/generators-monthly/json')
-
-    res.status(200).json(staking.data)
+    const generators = await addLabels(staking.data)
+    
+    res.status(200).json(generators)
   } catch (err) {
     next(err)
   }
