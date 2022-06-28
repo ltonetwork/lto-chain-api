@@ -9,6 +9,8 @@ const { check } = require('express-validator/check')
 const validateInput = require('../middleware/validateInput')
 const db = require('../utils/utils').knex
 const axios = require('axios')
+const TTLCache = require('@isaacs/ttlcache')
+const cache = new TTLCache({ ttl: 60000 })
 
 // Get generators stats total
 router.get('/all', async function (req, res, next) {
@@ -94,8 +96,15 @@ router.get('/staking/weekly',
 validateInput,
 async function (req, res, next) {
   try {
+    if (cache.has('/staking/weekly')) {
+      res.status(200).json(cache.get('/staking/weekly'))
+      return
+    }    
+  
     const staking = await axios.get('https://lto.tools/generators-weekly/json')
     const generators = await addLabels(staking.data)
+
+    cache.set('/staking/weekly', generators)
 
     res.status(200).json(generators)
   } catch (err) {
@@ -109,9 +118,16 @@ router.get('/staking/monthly',
 validateInput,
 async function (req, res, next) {
   try {
+    if (cache.has('/staking/monthly')) {
+      res.status(200).json(cache.get('/staking/monthly'))
+      return
+    }    
+    
     const staking = await axios.get('https://lto.tools/generators-monthly/json')
     const generators = await addLabels(staking.data)
     
+    cache.set('/staking/monthly', generators)
+        
     res.status(200).json(generators)
   } catch (err) {
     next(err)
