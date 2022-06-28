@@ -11,22 +11,25 @@ const db = require('../utils/utils').knex
 const moment = require('moment')
 const axios = require('axios')
 
-// Get total burned 
+async function calcBurned() {
+    const getMainnetSupply = await axios.get('http://node-bs1.lto.network:6869/supply')
+    const getContractBurn = await axios.get('https://bridge.lto.network/stats')
+
+    const txBurn = getMainnetSupply.data.burned / 100000000
+    const contractBurn = getContractBurn.data.volume.lto20.burned
+
+    const burned = txBurn + contractBurn
+
+    return burned
+}
+
+// Get total burned
 // Get generators stats (monthly)  from lto.tools
 router.get('/burned/total',
 validateInput,
 async function (req, res, next) {
   try {
-    const getTxBurn = await axios.get('https://lto.tools/balances/json')
-    const getBridgeBurn = await axios.get('https://nodes.lto.network/addresses/balance/3JrGV6TeEV3ovVjsh9SPqQL48EDLET47B9U')
-    const getContractBurn = await axios.get('https://bridge.lto.network/stats')
-
-    const txBurn = 500000000 - getTxBurn.data.totalBalance
-    const bridgeBurn = getBridgeBurn.data.balance / 100000000
-    const contractBurn = getContractBurn.data.volume.lto20.burned
-
-    const burned = txBurn + bridgeBurn + contractBurn
-
+    const burned = await calcBurned()
     res.status(200).json(burned)
   } catch (err) {
     next(err)
@@ -37,9 +40,7 @@ router.get('/supply/total',
 validateInput,
 async function (req, res, next) {
   try {
-    const getBurn = await axios.get('https://stats.ltonetwork.com/v1/stats/burned/total')
-
-    const supply = 500000000 - getBurn.data
+    const supply = 500000000 - (await calcBurned())
 
     res.status(200).json(supply)
   } catch (err) {
@@ -229,3 +230,4 @@ async function (req, res, next) {
 
 
 module.exports = router
+
