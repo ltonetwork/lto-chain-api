@@ -75,8 +75,8 @@ async function addLabels(generators) {
   const response = await axios.get('https://raw.githubusercontent.com/ltonetwork/lto-wallet/master/src/communityNodes.json')
   
   let map = {
-    "3Jfb7VJzmJjXyQDQ5Nw8R7G2MiasM5fm3Uy": { name: "Binance", payout: null },
-    "3JbZnF1i9rwab8YwBdGeNeAZhmcKzFfibUf": { name: "AscendEX", payout: null }
+    "3Jfb7VJzmJjXyQDQ5Nw8R7G2MiasM5fm3Uy": { name: "Binance", sharing: null },
+    "3JbZnF1i9rwab8YwBdGeNeAZhmcKzFfibUf": { name: "AscendEX", sharing: null }
   }
   response.data.nodes.forEach(node => map[node.address] = node)
   
@@ -84,7 +84,7 @@ async function addLabels(generators) {
     const node = map[generator.generator] || { name: null, payout: null }
     
     generator.label = node.name
-    generator.payout = node.sharing + ' - ' + node.payoutSchedule
+    if (node.sharing) generator.payout = node.sharing + ' - ' + node.payoutSchedule
   })
   
   return generators
